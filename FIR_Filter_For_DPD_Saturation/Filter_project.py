@@ -1,7 +1,6 @@
 import pandas as pd
 import numpy as np
 import scipy as py
-import matplotlib.ticker as ticker
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 from Funções import separa_variaveis, envoltoria, saturacao_soma, PAPR
@@ -44,6 +43,11 @@ sinal_imag_reamostrado_wifi = interp_imag_wifi(tempo_reamostrado_wifi)
 
 sinal_wifi1 = separa_variaveis(sinal_real_reamostrado_wifi, sinal_imag_reamostrado_wifi)
 sinal_LTE = separa_variaveis(sinal_real_reamostrado_LTE, sinal_imag_reamostrado_LTE)
+
+print(sinal_LTE)
+print("tamanho sinal LTE: ", len(sinal_LTE))
+print(sinal_wifi1)
+print("tamanho sinal wifi: ", len(sinal_wifi1))
 
 # CONCATENAR SINAL WIFI
 r = int(len(sinal_LTE) / len(sinal_wifi1)) + 1

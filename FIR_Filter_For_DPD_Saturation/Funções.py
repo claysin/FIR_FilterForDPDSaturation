@@ -358,6 +358,10 @@ def separa_variaveis(real, imaginaria):
         lista.append(complex(real[n], imaginaria[n]))
     return np.asarray(lista)
 
+def juntar(parte_real, parte_imag):
+    juntas = (parte_real + (1j*parte_imag))
+    return np.array(juntas)
+
 def envoltoria(x1, x2, freq_Amostragem, delta):
     env = np.zeros(len(x1), dtype=complex)
     for n in range(len(x1)):
