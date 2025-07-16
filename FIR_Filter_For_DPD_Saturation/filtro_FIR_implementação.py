@@ -149,7 +149,7 @@ print("(KAISAR)n° de coeficientes LTE: ", len(h_LTE))
 print("(KAISAR)n° de coeficientes wifi: ", len(h_wifi))
 
 h_LTE = h_LTE / np.sum(h_LTE) # Foi preciso pois o sinal estava sendo amplificado
-h_wifi = h_wifi / np.sum(h_wifi)
+h_wifi = h_wifi / np.sum(h_wifi) # Foi preciso pois o sinal estava sendo amplificado
 
 
 y_LTE = py.signal.lfilter(h_LTE,1,x2c_s) # aplica o FIR no sinal complexo
