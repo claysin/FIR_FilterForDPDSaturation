@@ -71,18 +71,18 @@ x1c_s, x2c_s = saturacao_soma(xn, L, vetor_wifi_replicado, vetor_LTE)
 
 # Plotagem dos sinais saturados --------------------------------------------------------------------------
 
-# xn2 = envoltoria(x1c_s, x2c_s, fs, delta_w)
-# plt.subplots()
-# #plt.title("Sum")
-# plt.xlabel("Time (μs)")
-# plt.ylabel("Amplitude (V)")
-# plt.xlim([0, 0.8e-5])
-# plt.plot(tempo_reamostrado_LTE, abs(xn), label="Input Signal")
-# plt.plot(tempo_reamostrado_LTE, abs(xn2), "--", label="Saturated Signal", color='red')
-# #plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x * 1e6:.0f}'))
-# plt.grid()
-# plt.legend()
-# plt.show()
+xn2 = envoltoria(x1c_s, x2c_s, fs, delta_w)
+plt.subplots()
+# plt.title("Soma")
+plt.xlabel("Tempo (μs)")
+plt.ylabel("Amplitude (V)")
+plt.xlim([0, 0.8e-5])
+plt.plot(tempo_reamostrado_LTE, abs(xn), label="Sinais de entrada")
+plt.plot(tempo_reamostrado_LTE, abs(xn2), "--", label="Sinal saturado", color='red')
+#plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x * 1e6:.0f}'))
+plt.grid()
+plt.legend()
+plt.show()
 
 # DEFININDO OS PARAMETROS PARA A ORDEM DO FILTRO -----------------------------------------------------------
 
@@ -114,7 +114,7 @@ sinal_wifi_hann = sinal_filtrado1_corrigido[:len(vetor_wifi_replicado)]
 
 # APLICAÇÃO DO FILTRO KAISAR ----------------------------------------------------------------------------------
 
-ripple = 0.01
+ripple = 0.05
 atenuacao = -20 * np.log10(ripple)
 
 def beta(A):
