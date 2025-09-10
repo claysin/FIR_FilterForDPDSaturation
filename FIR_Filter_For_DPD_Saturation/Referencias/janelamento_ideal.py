@@ -3,7 +3,7 @@ import scipy as py
 import matplotlib.pyplot as plt
 
 # Parâmetros
-M = 45
+M = 46
 Nfft = 65536
 
 janelas = {
