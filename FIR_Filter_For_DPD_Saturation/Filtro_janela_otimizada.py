@@ -166,7 +166,7 @@ axs[0].grid(True, linestyle='--', alpha=0.7)
 axs[0].legend(fontsize=10)
 
 
-axs[1].set_title("LTE")
+axs[1].set_title("LTE ")
 axs[1].plot(tempo_reamostrado_LTE, abs(sinal_LTE), color="blue", lw=1.5, label="Sinal pré-saturação")
 axs[1].plot(tempo_reamostrado_LTE, abs(sinal_LTE_saturado), "--" ,color="red", lw=1.5, label="Sinal saturado")
 axs[1].plot(tempo_reamostrado_LTE, abs(sinal_lte), "--", color="black", lw=1.5, label="Sinal filtrado")
