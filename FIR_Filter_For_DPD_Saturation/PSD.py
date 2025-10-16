@@ -10,10 +10,10 @@ from Funções import load_and_validate_mask, temp_to_freq
 # path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/Janela_da_mascara"
 # Kaiser
 # path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/Kaiser"
-
 # Otimizado
-path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/filtro_otimizado/"
-
+# path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/filtro_otimizado/"
+# # Mascara
+path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/Janela_da_mascara/"
 
 
 
@@ -81,7 +81,7 @@ try:
         print("Warning: LTE mask data could not be loaded or contains invalid data")
         legend_labels = ['Entrada', 'Saturado', 'Filtrado']
 
-    plt.legend(legend_labels, loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.legend(legend_labels, fontsize=10)
     plt.title("LTE")
     plt.xlabel("Frequência (MHz)")
     plt.ylabel("PSD (dBm/Hz)")
@@ -144,11 +144,12 @@ try:
         print("Warning: WiFi mask data could not be loaded or contains invalid data")
         legend_labels = ['Entrada', 'Saturado', 'Filtrado']
 
-    plt.legend(legend_labels, loc='center left', bbox_to_anchor=(1, 0.5))
+    plt.legend(legend_labels, fontsize=10)
     plt.title("WiFi")
     plt.xlabel("Frequência (MHz)")
     plt.ylabel("PSD (dBm/Hz)")
-    plt.xlim([-40, 40])
+    # plt.xlim([-40, 40])
+    plt.xlim([-25, 25])
     plt.ylim([-80, 0])
     plt.grid()
 

@@ -6,7 +6,9 @@ from scipy.signal import get_window
 from Funções import load_and_validate_mask, temp_to_freq
 
 # Caminho base
-path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/filtro_otimizado/"
+# path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/filtro_otimizado/"
+path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/Janela_da_mascara/"
+
 
 # =============== LTE ===============
 try:
@@ -137,6 +139,5 @@ if x1_WIFI is not None:
     axs[1].grid(True)
 
 plt.tight_layout()
-fig.savefig("/home/clayson/Área de trabalho/Projetos/Latex/template_semicro_2025/Template_SeMicro_2025/Figuras/psd.pdf")
-
+fig.savefig("/home/clayson/Área de trabalho/Projetos/Latex/Semicro_2025_Clayson/Figuras/psd_mascara.pdf")
 plt.show()

@@ -176,9 +176,9 @@ axs[1].set_ylabel("Amplitude", fontsize=12)
 axs[1].set_xlabel("Tempo (μs)", fontsize=12)
 axs[1].grid(True, linestyle='--', alpha=0.7)
 axs[1].legend(fontsize=10)
-
-
 plt.tight_layout()
 plt.show()
+
+# plt.savefig("/home/clayson/Área de trabalho/Projetos/Latex/template_semicro_2025/Template_SeMicro_2025/Figuras/compara_envoltoria_sinais_otimizado_separados.pdf")
 
 #============================================================================================================

@@ -6,7 +6,7 @@ from scipy.signal import get_window
 from Funções import load_and_validate_mask, temp_to_freq
 
 # Caminho base
-path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/filtro_otimizado/"
+path = "/arquivos_salvos/IC2/filtro_otimizado/"
 
 # Carregar máscaras
 freq_lte, mascara_lte = load_and_validate_mask(os.path.join(path, "mask_lte_20M.csv"))
