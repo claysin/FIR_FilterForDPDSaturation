@@ -144,6 +144,3 @@ vetor_de_diferenca = np.maximum((np.abs(xf2) - np.abs(envoltoria_sinal_saturado)
 # plt.tight_layout()
 # plt.show()
 # =================================================================================================
-
-
-

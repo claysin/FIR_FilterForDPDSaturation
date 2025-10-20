@@ -28,7 +28,6 @@ fs = 120e6
 interp_real_LTE = interp1d(tempo_LTE_original, parte_real_LTE, kind='linear')
 interp_imag_LTE = interp1d(tempo_LTE_original, parte_imaginaria_LTE, kind='linear')
 tempo_reamostrado_LTE = np.linspace(tempo_LTE_original[0], tempo_LTE_original[-1],int(fs * tempo_LTE_original[-1]))
-
 sinal_real_reamostrado_LTE = interp_real_LTE(tempo_reamostrado_LTE)
 sinal_imag_reamostrado_LTE = interp_imag_LTE(tempo_reamostrado_LTE)
 
@@ -36,7 +35,6 @@ sinal_imag_reamostrado_LTE = interp_imag_LTE(tempo_reamostrado_LTE)
 interp_real_wifi = interp1d(tempo_wifi_original, parte_real_wifi, kind='linear')
 interp_imag_wifi = interp1d(tempo_wifi_original, parte_imaginaria_wifi, kind='linear')
 tempo_reamostrado_wifi = np.linspace(tempo_wifi_original[0], tempo_wifi_original[-1],int(fs * tempo_wifi_original[-1]))
-
 sinal_real_reamostrado_wifi = interp_real_wifi(tempo_reamostrado_wifi)
 sinal_imag_reamostrado_wifi = interp_imag_wifi(tempo_reamostrado_wifi)
 
@@ -119,7 +117,6 @@ sinal_LTE_triangular = sinal_filtrado2_corrigido
 sinal_wifi_triangular = sinal_filtrado1_corrigido[:len(sinal_wifi1)]
 
 #DEFININDO JANELA HANNING
-
 coeficientes1 = py.signal.firwin(51, fc_normalizada1, window="hann")
 coeficientes2 = py.signal.firwin(81, fc_normalizada1, window="hann")
 sinal_filtrado1 = py.signal.lfilter(coeficientes1, 1, x1c_s)
@@ -247,42 +244,42 @@ sinal_wifi_lanczos = sinal_filtrado1_corrigido[:len(sinal_wifi1)]
 #-------------------------------------------------------------------------------------------
 # SALVAR DOCUMENTOS
 
-np.savetxt(save_path + "1entrada_real_Wifi.csv", sinal_wifi.real, delimiter=",")
-np.savetxt(save_path + "1entrada_imag_Wifi.csv", sinal_wifi.imag, delimiter=",")
-np.savetxt(save_path + "1entrada_real_LTE.csv", sinal_LTE.real, delimiter=",")
-np.savetxt(save_path + "1entrada_imag_LTE.csv", sinal_LTE.imag, delimiter=",")
-
-np.savetxt(save_path + "2saturado_real_Wifi.csv", x1c_s.real, delimiter=",")
-np.savetxt(save_path + "2saturado_imag_Wifi.csv", x1c_s.imag, delimiter=",")
-np.savetxt(save_path + "2saturado_real_LTE.csv", x2c_s.real, delimiter=",")
-np.savetxt(save_path + "2saturado_imag_LTE.csv", x2c_s.imag, delimiter=",")
-
-np.savetxt(save_path + "3filtrado_real_Wifi_triangular.csv", sinal_wifi_triangular.real, delimiter=",")
-np.savetxt(save_path + "3filtrado_imag_Wifi_triangular.csv", sinal_wifi_triangular.imag, delimiter=",")
-np.savetxt(save_path + "3filtrado_real_LTE_triangular.csv", sinal_LTE_triangular.real, delimiter=",")
-np.savetxt(save_path + "3filtrado_imag_LTE_triangular.csv", sinal_LTE_triangular.imag, delimiter=",")
-
-np.savetxt(save_path + "4filtrado_real_Wifi_hann.csv", sinal_wifi_hann.real, delimiter=",")
-np.savetxt(save_path + "4filtrado_imag_Wifi_hann.csv", sinal_wifi_hann.imag, delimiter=",")
-np.savetxt(save_path + "4filtrado_real_LTE_hann.csv", sinal_LTE_hann.real, delimiter=",")
-np.savetxt(save_path + "4filtrado_imag_LTE_hann.csv", sinal_LTE_hann.imag, delimiter=",")
-
-np.savetxt(save_path + "5filtrado_real_Wifi_blackman.csv", sinal_wifi_blackman.real, delimiter=",")
-np.savetxt(save_path + "5filtrado_imag_Wifi_blackman.csv", sinal_wifi_blackman.imag, delimiter=",")
-np.savetxt(save_path + "5filtrado_real_LTE_blackman.csv", sinal_LTE_blackman.real, delimiter=",")
-np.savetxt(save_path + "5filtrado_imag_LTE_blackman.csv", sinal_LTE_blackman.imag, delimiter=",")
-
-np.savetxt(save_path + "6filtrado_real_Wifi_hamming.csv", sinal_wifi_hamming.real, delimiter=",")
-np.savetxt(save_path + "6filtrado_imag_Wifi_hamming.csv", sinal_wifi_hamming.imag, delimiter=",")
-np.savetxt(save_path + "6filtrado_real_LTE_hamming.csv", sinal_LTE_hamming.real, delimiter=",")
-np.savetxt(save_path + "6filtrado_imag_LTE_hamming.csv", sinal_LTE_hamming.imag, delimiter=",")
-
-np.savetxt(save_path + "7filtrado_real_Wifi_bartlett.csv", sinal_wifi_bartlett.real, delimiter=",")
-np.savetxt(save_path + "7filtrado_imag_Wifi_bartlett.csv", sinal_wifi_bartlett.imag, delimiter=",")
-np.savetxt(save_path + "7filtrado_real_LTE_bartlett.csv", sinal_LTE_bartlett.real, delimiter=",")
-np.savetxt(save_path + "7filtrado_imag_LTE_bartlett.csv", sinal_LTE_bartlett.imag, delimiter=",")
-
-np.savetxt(save_path + "8filtrado_real_Wifi_lanczos.csv", sinal_wifi_lanczos.real, delimiter=",")
-np.savetxt(save_path + "8filtrado_imag_Wifi_lanczos.csv", sinal_wifi_lanczos.imag, delimiter=",")
-np.savetxt(save_path + "8filtrado_real_LTE_lanczos.csv", sinal_LTE_lanczos.real, delimiter=",")
-np.savetxt(save_path + "8filtrado_imag_LTE_lanczos.csv", sinal_LTE_lanczos.imag, delimiter=",")
+# np.savetxt(save_path + "1entrada_real_Wifi.csv", sinal_wifi.real, delimiter=",")
+# np.savetxt(save_path + "1entrada_imag_Wifi.csv", sinal_wifi.imag, delimiter=",")
+# np.savetxt(save_path + "1entrada_real_LTE.csv", sinal_LTE.real, delimiter=",")
+# np.savetxt(save_path + "1entrada_imag_LTE.csv", sinal_LTE.imag, delimiter=",")
+#
+# np.savetxt(save_path + "2saturado_real_Wifi.csv", x1c_s.real, delimiter=",")
+# np.savetxt(save_path + "2saturado_imag_Wifi.csv", x1c_s.imag, delimiter=",")
+# np.savetxt(save_path + "2saturado_real_LTE.csv", x2c_s.real, delimiter=",")
+# np.savetxt(save_path + "2saturado_imag_LTE.csv", x2c_s.imag, delimiter=",")
+#
+# np.savetxt(save_path + "3filtrado_real_Wifi_triangular.csv", sinal_wifi_triangular.real, delimiter=",")
+# np.savetxt(save_path + "3filtrado_imag_Wifi_triangular.csv", sinal_wifi_triangular.imag, delimiter=",")
+# np.savetxt(save_path + "3filtrado_real_LTE_triangular.csv", sinal_LTE_triangular.real, delimiter=",")
+# np.savetxt(save_path + "3filtrado_imag_LTE_triangular.csv", sinal_LTE_triangular.imag, delimiter=",")
+#
+# np.savetxt(save_path + "4filtrado_real_Wifi_hann.csv", sinal_wifi_hann.real, delimiter=",")
+# np.savetxt(save_path + "4filtrado_imag_Wifi_hann.csv", sinal_wifi_hann.imag, delimiter=",")
+# np.savetxt(save_path + "4filtrado_real_LTE_hann.csv", sinal_LTE_hann.real, delimiter=",")
+# np.savetxt(save_path + "4filtrado_imag_LTE_hann.csv", sinal_LTE_hann.imag, delimiter=",")
+#
+# np.savetxt(save_path + "5filtrado_real_Wifi_blackman.csv", sinal_wifi_blackman.real, delimiter=",")
+# np.savetxt(save_path + "5filtrado_imag_Wifi_blackman.csv", sinal_wifi_blackman.imag, delimiter=",")
+# np.savetxt(save_path + "5filtrado_real_LTE_blackman.csv", sinal_LTE_blackman.real, delimiter=",")
+# np.savetxt(save_path + "5filtrado_imag_LTE_blackman.csv", sinal_LTE_blackman.imag, delimiter=",")
+#
+# np.savetxt(save_path + "6filtrado_real_Wifi_hamming.csv", sinal_wifi_hamming.real, delimiter=",")
+# np.savetxt(save_path + "6filtrado_imag_Wifi_hamming.csv", sinal_wifi_hamming.imag, delimiter=",")
+# np.savetxt(save_path + "6filtrado_real_LTE_hamming.csv", sinal_LTE_hamming.real, delimiter=",")
+# np.savetxt(save_path + "6filtrado_imag_LTE_hamming.csv", sinal_LTE_hamming.imag, delimiter=",")
+#
+# np.savetxt(save_path + "7filtrado_real_Wifi_bartlett.csv", sinal_wifi_bartlett.real, delimiter=",")
+# np.savetxt(save_path + "7filtrado_imag_Wifi_bartlett.csv", sinal_wifi_bartlett.imag, delimiter=",")
+# np.savetxt(save_path + "7filtrado_real_LTE_bartlett.csv", sinal_LTE_bartlett.real, delimiter=",")
+# np.savetxt(save_path + "7filtrado_imag_LTE_bartlett.csv", sinal_LTE_bartlett.imag, delimiter=",")
+#
+# np.savetxt(save_path + "8filtrado_real_Wifi_lanczos.csv", sinal_wifi_lanczos.real, delimiter=",")
+# np.savetxt(save_path + "8filtrado_imag_Wifi_lanczos.csv", sinal_wifi_lanczos.imag, delimiter=",")
+# np.savetxt(save_path + "8filtrado_real_LTE_lanczos.csv", sinal_LTE_lanczos.real, delimiter=",")
+# np.savetxt(save_path + "8filtrado_imag_LTE_lanczos.csv", sinal_LTE_lanczos.imag, delimiter=",")
