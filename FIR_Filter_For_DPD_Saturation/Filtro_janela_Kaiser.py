@@ -11,7 +11,7 @@ from Funções import juntar, envoltoria, saturacao_soma
 # TRAZENDO ARQUIVOS DE REFERÊNCIA-------------------------------------------------------------------------------
 loc_LTE = "sinal_LTE.csv"
 loc_Wifi = "sinal_wifi.csv"
-save_path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/"
+save_path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/IC2/Kaiser/"
 sinal_LTE = pd.read_csv(loc_LTE)
 sinal_Wifi = pd.read_csv(loc_Wifi)
 
@@ -69,16 +69,18 @@ xn = envoltoria(vetor_wifi_replicado, vetor_LTE, fs, delta_w)
 x1c_s, x2c_s = saturacao_soma(xn, L, vetor_wifi_replicado, vetor_LTE)
 
 
+
+
 # Plotagem dos sinais saturados --------------------------------------------------------------------------
 
 # xn2 = envoltoria(x1c_s, x2c_s, fs, delta_w)
 # plt.subplots()
-# #plt.title("Sum")
-# plt.xlabel("Time (μs)")
+# # plt.title("Soma")
+# plt.xlabel("Tempo (μs)")
 # plt.ylabel("Amplitude (V)")
 # plt.xlim([0, 0.8e-5])
-# plt.plot(tempo_reamostrado_LTE, abs(xn), label="Input Signal")
-# plt.plot(tempo_reamostrado_LTE, abs(xn2), "--", label="Saturated Signal", color='red')
+# plt.plot(tempo_reamostrado_LTE, abs(xn), label="Sinais de entrada")
+# plt.plot(tempo_reamostrado_LTE, abs(xn2), "--", label="Sinal saturado", color='red')
 # #plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x * 1e6:.0f}'))
 # plt.grid()
 # plt.legend()
@@ -114,7 +116,7 @@ sinal_wifi_hann = sinal_filtrado1_corrigido[:len(vetor_wifi_replicado)]
 
 # APLICAÇÃO DO FILTRO KAISAR ----------------------------------------------------------------------------------
 
-ripple = 0.01
+ripple = 0.05
 atenuacao = -20 * np.log10(ripple)
 
 def beta(A):
@@ -129,7 +131,7 @@ def beta(A):
     return  valor_beta
 
 # Ordem do filtro kaiser
-frequencia_transicao = 30e6
+frequencia_transicao = 35e6
 omega_delta = 2 * np.pi * (frequencia_transicao / fs)
 M = np.ceil((atenuacao - 8) / (2.285 * omega_delta))
 N = int(M + 1)
@@ -149,7 +151,7 @@ print("(KAISAR)n° de coeficientes LTE: ", len(h_LTE))
 print("(KAISAR)n° de coeficientes wifi: ", len(h_wifi))
 
 h_LTE = h_LTE / np.sum(h_LTE) # Foi preciso pois o sinal estava sendo amplificado
-h_wifi = h_wifi / np.sum(h_wifi)
+h_wifi = h_wifi / np.sum(h_wifi) # Foi preciso pois o sinal estava sendo amplificado
 
 
 y_LTE = py.signal.lfilter(h_LTE,1,x2c_s) # aplica o FIR no sinal complexo
@@ -163,11 +165,41 @@ sinal_LTE_kaiser = sinal_filtrado2_kaisar
 sinal_wifi_kaiser = sinal_filtrado1_kaisar[:len(vetor_wifi_replicado)]
 
 
-print("Ganho do filtro LTE:", np.sum(h_LTE))
-print("Ganho do filtro WiFi:", np.sum(h_wifi))
+sinal_wifi_para_envoltoria = sinal_filtrado1_kaisar
+envoltoria_sinal_final = envoltoria(vetor_LTE, sinal_wifi_para_envoltoria, fs, delta_w)
+envoltoria_sinal_saturado = envoltoria(x1c_s, x2c_s, fs, delta_w)
+esf1, esf2 = saturacao_soma(envoltoria_sinal_final, L, sinal_wifi_para_envoltoria, sinal_LTE_kaiser)
+xf2 = envoltoria(esf1, esf2, fs, delta_w)
 
 
+vetor_de_diferenca_kaiser = np.maximum((abs(xf2 )- abs(envoltoria_sinal_saturado)), 0)
 
+fig, ax = plt.subplots(2,1, figsize=(10,6))
+ax[0].set_xlabel("Time (μs)")
+ax[0].set_ylabel("Amplitude (V)")
+# ax[0].set_xlim([0.25e-5, 0.35e-5])
+ax[0].set_xlim([0.6e-5, 1.3e-5])
+# ax[0].xlim([0.25e-5, 0.7e-5])
+# ax[0].ylim([1, 1.6])
+ax[0].plot(tempo_reamostrado_LTE, abs(xn), label="Input Signal")
+ax[0].plot(tempo_reamostrado_LTE, abs(envoltoria_sinal_saturado), "--", label="Saturated Signal", color='red')
+ax[0].plot(tempo_reamostrado_LTE, abs(xf2), "--", label="Filtered Signal", color='black')
+ax[0].grid()
+ax[0].legend()
+
+ax[1].stem(tempo_reamostrado_LTE,vetor_de_diferenca_kaiser,
+    label=(
+        f"Média = {np.mean(abs(vetor_de_diferenca_kaiser)):.3e}"
+    )
+)
+
+# ax[1].set_xlim([0.25e-5, 0.35e-5])
+ax[1].set_xlim([0.6e-5, 1.3e-5])
+ax[1].set_ylim([0, 0.4])
+ax[1].grid()
+ax[1].legend()
+plt.tight_layout()
+plt.show()
 
 
 
@@ -214,10 +246,10 @@ print("Ganho do filtro WiFi:", np.sum(h_wifi))
 # np.savetxt(save_path + "4filtrado_real_LTE_hann.csv", sinal_LTE_hann.real, delimiter=",")
 # np.savetxt(save_path + "4filtrado_imag_LTE_hann.csv", sinal_LTE_hann.imag, delimiter=",")
 
-np.savetxt(save_path + "9filtrado_real_Wifi_kaiser.csv", sinal_wifi_kaiser.real, delimiter=",")
-np.savetxt(save_path + "9filtrado_imag_Wifi_kaiser.csv", sinal_wifi_kaiser.imag, delimiter=",")
-np.savetxt(save_path + "9filtrado_real_LTE_kaiser.csv", sinal_LTE_kaiser.real, delimiter=",")
-np.savetxt(save_path + "9filtrado_imag_LTE_kaiser.csv", sinal_LTE_kaiser.imag, delimiter=",")
+np.savetxt(save_path + "filtrado_real_Wifi_kaiser.csv", sinal_wifi_kaiser.real, delimiter=",")
+np.savetxt(save_path + "filtrado_imag_Wifi_kaiser.csv", sinal_wifi_kaiser.imag, delimiter=",")
+np.savetxt(save_path + "filtrado_real_LTE_kaiser.csv", sinal_LTE_kaiser.real, delimiter=",")
+np.savetxt(save_path + "filtrado_imag_LTE_kaiser.csv", sinal_LTE_kaiser.imag, delimiter=",")
 
 
 

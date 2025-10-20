@@ -4,6 +4,7 @@ import math
 import matplotlib.pyplot as plt
 import cmath
 import pandas as pd
+from scipy.signal import get_window
 
 
 def Obter_X_MP(M, P, In):
@@ -622,3 +623,104 @@ def PAPR(vetor_linha):
     PAPR = 10 * np.log10(pico / media)
     return PAPR
 
+def load_and_validate_mask(filename):
+    """
+    Load mask file and ensure numeric data
+    """
+    try:
+        # Try loading with pandas first
+        m = pd.read_csv(filename, header=None)
+
+        # Check if data is numeric, if not try to convert
+        try:
+            # Convert to numeric, errors='coerce' will turn non-numeric to NaN
+            m[0] = pd.to_numeric(m[0], errors='coerce')
+            m[1] = pd.to_numeric(m[1], errors='coerce')
+
+            # Drop rows with NaN values
+            m = m.dropna()
+
+            # Convert to numpy arrays
+            freq_mask = m[0].values
+            power_mask = m[1].values
+
+            return freq_mask, power_mask
+
+        except Exception as e:
+            print(f"Error converting mask data to numeric: {e}")
+            return None, None
+
+    except Exception as e:
+        print(f"Error loading mask file {filename}: {e}")
+        return None, None
+
+
+def temp_to_freq(sig, fs, repetitions, pontos_para_media, Band, redBanda, janela):
+    """
+    Converte sinal no tempo para frequência (PSD) e calcula ACPR.
+    """
+    # Tamanho da FFT
+    N = 2 ** int(np.floor(np.log2(len(sig) / repetitions)))
+    resolution = fs / N
+
+    # Seleção da janela
+    janela_map = {
+        1: "hann",
+        2: "hamming",
+        3: ("kaiser", 14),
+        4: "blackman",
+        5: "bartlett",
+        6: "boxcar",
+        7: ("chebwin", 100),
+        8: "hann",
+        9: "triang"
+    }
+    if janela in janela_map:
+        w = get_window(janela_map[janela], N)
+    else:
+        raise ValueError("Janela inválida!")
+
+    # FFT por repetições
+    Y = []
+    for var1 in range(repetitions):
+        start = var1 * N
+        end = (var1 + 1) * N
+        x_win = w * sig[start:end]
+        Y.append(np.fft.fftshift(np.fft.fft(x_win, N) / N))
+    Y = np.array(Y).T
+
+    # Potência média
+    if repetitions > 1:
+        Z = np.mean((np.abs(Y) ** 2) / 2 / 50, axis=1)
+    else:
+        Z = (np.abs(Y) ** 2) / 2 / 50
+
+    # Eixo de frequência
+    a = np.arange(0, resolution * N, resolution) - resolution * N / 2
+
+    # Média por pontos
+    p = pontos_para_media
+    x = []
+    y_abs = []
+    for v in range(len(a) // p):
+        x.append(np.mean(a[v * p:(v + 1) * p]))
+        y_abs.append(np.mean(Z[v * p:(v + 1) * p]))
+    x = np.array(x)
+    y_abs = np.array(y_abs)
+
+    # Converter para dBm/Hz
+    y_db = 10 * np.log10(y_abs / 1e-3)
+
+    # Máscaras de banda
+    bL = (x < -(1 + redBanda) * Band / 2) & (x > -1.5 * (1 - redBanda) * Band)
+    bM = (x > -(1 - redBanda) * Band / 2) & (x < (1 - redBanda) * Band / 2)
+    bU = (x > (1 + redBanda) * Band / 2) & (x < 1.5 * (1 - redBanda) * Band)
+
+    # ACPR
+    ACPR_low_abs = np.sum(y_abs[bL]) / np.sum(y_abs[bM])
+    ACPR_upper_abs = np.sum(y_abs[bU]) / np.sum(y_abs[bM])
+    ACPR_low = 10 * np.log10(ACPR_low_abs)
+    ACPR_upper = 10 * np.log10(ACPR_upper_abs)
+    ACPR_mean = 10 * np.log10(np.mean([ACPR_low_abs, ACPR_upper_abs]))
+
+    return x, y_db, ACPR_low, ACPR_upper, ACPR_mean

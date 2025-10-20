@@ -9,7 +9,7 @@ from Funções import separa_variaveis, envoltoria, saturacao_soma, PAPR
 
 url_sinal_LTE = 'sinal_LTE.csv'
 url_sinal_wifi = 'sinal_wifi.csv'
-#save_path = "xxx\xxxx\xxxx"
+save_path = "/home/clayson/Área de trabalho/Projetos/python/FIR_Filter_For_DPD_Saturation/arquivos_salvos/"
 
 projeto_LTE = pd.read_csv(url_sinal_LTE)
 projeto_wifi = pd.read_csv(url_sinal_wifi)
@@ -28,7 +28,6 @@ fs = 120e6
 interp_real_LTE = interp1d(tempo_LTE_original, parte_real_LTE, kind='linear')
 interp_imag_LTE = interp1d(tempo_LTE_original, parte_imaginaria_LTE, kind='linear')
 tempo_reamostrado_LTE = np.linspace(tempo_LTE_original[0], tempo_LTE_original[-1],int(fs * tempo_LTE_original[-1]))
-
 sinal_real_reamostrado_LTE = interp_real_LTE(tempo_reamostrado_LTE)
 sinal_imag_reamostrado_LTE = interp_imag_LTE(tempo_reamostrado_LTE)
 
@@ -36,7 +35,6 @@ sinal_imag_reamostrado_LTE = interp_imag_LTE(tempo_reamostrado_LTE)
 interp_real_wifi = interp1d(tempo_wifi_original, parte_real_wifi, kind='linear')
 interp_imag_wifi = interp1d(tempo_wifi_original, parte_imaginaria_wifi, kind='linear')
 tempo_reamostrado_wifi = np.linspace(tempo_wifi_original[0], tempo_wifi_original[-1],int(fs * tempo_wifi_original[-1]))
-
 sinal_real_reamostrado_wifi = interp_real_wifi(tempo_reamostrado_wifi)
 sinal_imag_reamostrado_wifi = interp_imag_wifi(tempo_reamostrado_wifi)
 
@@ -95,14 +93,15 @@ x1c_s, x2c_s = saturacao_soma(xn, L, sinal_wifi, sinal_LTE)
 xn2 = envoltoria(x1c_s, x2c_s, f_amostragem, delta_w)
 # plt.subplots()
 # #plt.title("Sum")
-# plt.xlabel("Time (μs)")
+# plt.xlabel("Tempo (μs)")
 # plt.ylabel("Amplitude (V)")
 # plt.xlim([0, 0.8e-5])
-# plt.plot(tempo_reamostrado_LTE, abs(xn), label="Input Signal")
-# plt.plot(tempo_reamostrado_LTE, abs(xn2), "--", label="Saturated Signal", color='red')
-# plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x * 1e6:.0f}'))
+# plt.plot(tempo_reamostrado_LTE, abs(xn), label="Sinal de entrada")
+# plt.plot(tempo_reamostrado_LTE, abs(xn2), "--", label="Sinal saturado", color='red')
+# # plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x * 1e6:.0f}'))
 # plt.grid()
 # plt.legend()
+# plt.show()
 #-------------------------------------------------------------------------------------------
 #DEFININDO JANELA TRIANGULAR
 
@@ -118,7 +117,6 @@ sinal_LTE_triangular = sinal_filtrado2_corrigido
 sinal_wifi_triangular = sinal_filtrado1_corrigido[:len(sinal_wifi1)]
 
 #DEFININDO JANELA HANNING
-
 coeficientes1 = py.signal.firwin(51, fc_normalizada1, window="hann")
 coeficientes2 = py.signal.firwin(81, fc_normalizada1, window="hann")
 sinal_filtrado1 = py.signal.lfilter(coeficientes1, 1, x1c_s)
@@ -133,18 +131,19 @@ xf = envoltoria(sinal_filtrado1_corrigido, sinal_filtrado2_corrigido, f_amostrag
 x1f_s, x2f_s = saturacao_soma(xf, L, sinal_filtrado1_corrigido, sinal_filtrado2_corrigido)
 xf2 = envoltoria(x1f_s, x2f_s, f_amostragem, delta_w)
 
-# plt.subplots()
-# #plt.title("Sum")
-# plt.xlabel("Time (μs)")
-# plt.ylabel("Amplitude (V)")
-# plt.xlim([0.25e-5, 0.35e-5])
-# plt.ylim([1, 1.6])
-# plt.plot(tempo_reamostrado_LTE, abs(xn), label="Input Signal")
-# plt.plot(tempo_reamostrado_LTE, abs(xn2), "--", label="Saturated Signal", color='red')
-# plt.plot(tempo_reamostrado_LTE, abs(xf2), "--", label="Filtered Signal", color='black')
+plt.subplots()
+#plt.title("Sum")
+plt.xlabel("Time (μs)")
+plt.ylabel("Amplitude (V)")
+plt.xlim([0.25e-5, 0.35e-5])
+plt.ylim([1, 1.6])
+plt.plot(tempo_reamostrado_LTE, abs(xn), label="Input Signal")
+plt.plot(tempo_reamostrado_LTE, abs(xn2), "--", label="Saturated Signal", color='red')
+plt.plot(tempo_reamostrado_LTE, abs(xf2), "--", label="Filtered Signal", color='black')
 # plt.gca().xaxis.set_major_formatter(ticker.FuncFormatter(lambda x, _: f'{x * 1e6:.1f}'))
-# plt.grid()
-# plt.legend()
+plt.grid()
+plt.legend()
+plt.show()
 
 
 
